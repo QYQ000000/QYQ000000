@@ -1,0 +1,181 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      Intro to FeatureLayer | Sample | ArcGIS API for JavaScript 4.23
+    </title>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.23/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.23/"></script>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+       #header {
+         background: rgba(100, 100, 0, 0.5);
+      }
+      #text {
+         color: white;
+         padding: 2%;
+      }
+      #panel {
+        background: rgba(100, 150, 0, 0.5);
+      }
+    </style>
+
+    <script>
+      require([
+       "esri/Map",
+       "esri/views/MapView", 
+       "esri/layers/FeatureLayer",
+       "esri/widgets/ScaleBar",
+        "esri/widgets/Fullscreen",
+        "esri/widgets/Home",
+        "esri/widgets/Legend",
+        "esri/widgets/Expand",
+        "esri/widgets/Search",
+        "esri/portal/Portal",
+        "esri/widgets/BasemapGallery",
+        "esri/widgets/BasemapGallery/support/PortalBasemapsSource",
+        "esri/rest/query"
+      ], (
+        Map,
+        MapView,
+        FeatureLayer,
+        ScaleBar,
+        Fullscreen,
+        Home,
+        Legend,
+        Expand,
+        Search,
+        Portal,
+        BasemapGallery,
+        PortalBasemapsSource,
+        query
+        
+      ) => {
+        
+         const portal = new Portal();
+        const source = new PortalBasemapsSource({
+          portal,
+          query: {
+            id: "bdb9d65e0b5c480c8dcc6916e7f4e099"
+          }
+        });
+
+        const map = new Map({
+          basemap: "hybrid"
+        });
+
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+
+          extent: {
+            // autocasts as new Extent()
+            xmin: -9177811,
+            ymin: 4247000,
+            xmax: -9176791,
+            ymax: 4247784,
+            spatialReference: 102100
+          }
+        });
+
+        /********************
+         * Add feature layer
+         ********************/
+
+        // Carbon storage of trees in Warren Wilson College.
+        const featureLayer = new FeatureLayer({
+          url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/Landscape_Trees/FeatureServer/0"
+        });
+
+        map.add(featureLayer);
+        
+         //比例尺
+        let scaleBar = new ScaleBar({
+          view: view,
+          style: "ruler",
+          unit: "non-metric"
+        });
+        view.ui.add(scaleBar, {
+          position: "bottom-left"
+        });
+
+        //全屏按钮
+        fullscreen = new Fullscreen({
+          view: view
+        });
+        view.ui.add(fullscreen, "bottom-right");
+
+        //返回主视图
+        let homeWidget = new Home({
+          view: view
+        });
+        view.ui.add(homeWidget, "top-left");
+
+        //展开的图例
+        view.ui.add(
+          new Expand({
+            view: view,
+            content: new Legend({
+              view: view
+            })
+          }),
+          "top-left"
+        );
+
+        //搜索框
+        const searchWidget = new Search({
+          view: view
+        });
+        // Adds the search widget below other elements in
+        // the top left corner of the view
+        view.ui.add(searchWidget, {
+          position: "top-right",
+          index: 2
+        });
+
+        const bgExpand = new Expand({
+          view,
+          content: new BasemapGallery({ source, view }),
+          expandIconClass: "esri-icon-basemap"
+        });
+        view.ui.add(bgExpand, "top-left");
+        
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="header">
+      <div id="text">实验六应用页眉 </div>
+     
+    </div>
+     <div id="viewDiv">
+      <div id="panel">
+        <div style="padding: 10px">
+          <h3>1111111</h3>
+          <div style="padding-bottom: 700px">
+            //这里可以放呈现的内容
+
+            <strong>//表示字体加粗</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
